@@ -1,11 +1,15 @@
 <?php
-
+declare(strict_types=1);
 namespace App\Services\Api;
 
 use App\Models\User;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NoSuchElementException;
-use Symfony\Component\HttpKernel\Exception\InvalidMetadataException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+/**
+ * Interface UserServiceInterface
+ */
 interface UserServiceInterface
 {
     /**
@@ -20,7 +24,7 @@ interface UserServiceInterface
      *
      * @param int $id
      * @return User
-     * @throws NoSuchElementException
+     * @throws ModelNotFoundException
      */
     public function getUser(int $id): User;
 
@@ -29,7 +33,7 @@ interface UserServiceInterface
      *
      * @param array $data
      * @return User
-     * @throws InvalidMetadataException
+     * @throws ValidationException
      */
     public function addUser(array $data): User;
 
@@ -39,6 +43,7 @@ interface UserServiceInterface
      * @param int $id
      * @param array $data
      * @return User
+     * @throws ValidationException
      */
     public function editUser(int $id, array $data): User;
 
@@ -47,6 +52,7 @@ interface UserServiceInterface
      *
      * @param int $id
      * @return bool
+     * @throws ModelNotFoundException|\Throwable
      */
     public function deleteUser(int $id): bool;
 
