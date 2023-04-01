@@ -6,11 +6,9 @@ namespace App\Services;
 use App\Models\User;
 use App\Repositories\Api\UserRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
-use Throwable;
 
 /**
  * Class UserService
@@ -93,13 +91,29 @@ class UserService implements Api\UserServiceInterface
     }
 
     /**
-     * @param int $id
-     * @return bool
-     * @throws ModelNotFoundException|Throwable
+     * @inheritDoc
      */
     public function deleteUser(int $id): bool
     {
         return $this->userRepository->getById($id)
             ->deleteOrFail();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function attachUserToGroups(int $userId, array $groupsId): bool
+    {
+        $validator = ValidatorFacade::make(['ids' => $groupsId], [
+            'ids.*' => 'nullable|integer|exists:App\Models\Group,id',
+        ]);
+
+        if (!$validator->errors()->isEmpty()) {
+            throw new ValidationException($validator);
+        }
+
+        $user = $this->userRepository->getById($userId);
+
+        return $this->userRepository->attachGroups($user, $groupsId);
     }
 }

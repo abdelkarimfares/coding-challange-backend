@@ -57,4 +57,14 @@ interface UserServiceInterface
      */
     public function deleteUser(int $id): bool;
 
+    /**
+     * Attach user to groups
+     *
+     * @param int $userId
+     * @param array $groupsId
+     * @return bool
+     * @throws ValidationException|\Throwable
+     */
+    public function attachUserToGroups(int $userId, array $groupsId): bool;
+
 }

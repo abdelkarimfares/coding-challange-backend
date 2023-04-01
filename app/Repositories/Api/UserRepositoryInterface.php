@@ -6,6 +6,7 @@ namespace App\Repositories\Api;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Throwable;
 
 /**
  * Interface UserRepositoryInterface
@@ -45,4 +46,14 @@ interface UserRepositoryInterface
      * @throws ModelNotFoundException
      */
     public function updateUser(int $id, array $data): User;
+
+    /**
+     * Attach groups to user
+     *
+     * @param User $user
+     * @param array $groupsId
+     * @return bool
+     * @throws Throwable
+     */
+    public function attachGroups(User $user, array $groupsId): bool;
 }
