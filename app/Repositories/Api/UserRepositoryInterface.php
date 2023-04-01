@@ -24,7 +24,7 @@ interface UserRepositoryInterface
      *
      * @param int $id
      * @return User
-     * @throws Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws ModelNotFoundException
      */
     public function getById(int $id): User;
 
