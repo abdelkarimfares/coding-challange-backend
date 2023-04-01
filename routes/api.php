@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\GroupController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
@@ -20,3 +21,11 @@ use App\Http\Controllers\Api\UserController;
 // });
 
 Route::get('/users', [UserController::class, 'index']);
+Route::post('/users/create', [UserController::class, 'store']);
+Route::get('/users/{id}/show', [UserController::class, 'show']);
+Route::patch('/users/{id}/update', [UserController::class, 'update']);
+Route::delete('/users/{id}/delete', [UserController::class, 'delete']);
+Route::post('/users/{id}/attach-groups', [UserController::class, 'attachGroups']);
+
+Route::get('/groups', [GroupController::class, 'index']);
+Route::get('/groups/{id}/show', [GroupController::class, 'show']);
