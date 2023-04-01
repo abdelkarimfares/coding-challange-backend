@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace App\Services\Api;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NoSuchElementException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -15,9 +16,9 @@ interface UserServiceInterface
     /**
      * Get All Users
      *
-     * @return array
+     * @return Collection
      */
-    public function getUsers(): array;
+    public function getUsers(): Collection;
 
     /**
      * Get single user by id

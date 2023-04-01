@@ -5,6 +5,7 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Repositories\Api\UserRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -26,9 +27,9 @@ class UserService implements Api\UserServiceInterface
     /**
      * @inheritDoc
      */
-    public function getUsers(): array
+    public function getUsers(): Collection
     {
-        return $this->userRepository->getAllUsers()->toArray();
+        return $this->userRepository->getAllUsers();
     }
 
     /**
