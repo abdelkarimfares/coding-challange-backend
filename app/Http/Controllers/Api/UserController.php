@@ -31,7 +31,13 @@ class UserController extends Controller
      */
     public function index()
     {
-        return response()->json(['users' => UserResource::collection($this->userService->getUsers())]);
+        $pagedUsers = $this->userService->getUsers();
+        return response()->json([
+            'items' => UserResource::collection($pagedUsers->items()),
+            'current_page' => $pagedUsers->currentPage(),
+            'count' => $pagedUsers->count(),
+            'per_page' => $pagedUsers->perPage()
+        ]);
     }
 
     /**

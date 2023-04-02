@@ -5,7 +5,7 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Repositories\Api\UserRepositoryInterface;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
@@ -25,9 +25,9 @@ class UserService implements Api\UserServiceInterface
     /**
      * @inheritDoc
      */
-    public function getUsers(): Collection
+    public function getUsers(int $perPage = 20): LengthAwarePaginator
     {
-        return $this->userRepository->getAllUsers();
+        return $this->userRepository->getAllUsers($perPage);
     }
 
     /**

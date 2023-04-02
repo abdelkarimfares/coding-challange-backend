@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace App\Services\Api;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NoSuchElementException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -16,9 +16,10 @@ interface UserServiceInterface
     /**
      * Get All Users
      *
-     * @return Collection
+     * @param int $perPage
+     * @return LengthAwarePaginator
      */
-    public function getUsers(): Collection;
+    public function getUsers(int $perPage = 20): LengthAwarePaginator;
 
     /**
      * Get single user by id

@@ -6,7 +6,7 @@ namespace App\Repositories;
 use App\Models\User;
 use App\Models\UserGroup;
 use App\Repositories\Api\UserRepositoryInterface;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -24,9 +24,9 @@ class UserRepository implements UserRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function getAllUsers(): Collection
+    public function getAllUsers(int $perPage): LengthAwarePaginator
     {
-        return $this->user->get();
+        return $this->user->paginate($perPage);
     }
 
     /**
