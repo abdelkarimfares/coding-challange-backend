@@ -27,7 +27,14 @@ class GroupController extends Controller
      */
     public function index()
     {
-        return response()->json(['groups' => GroupResource::collection($this->groupService->getGroups())]);
+        $pagedGroups = $this->groupService->getGroups();
+
+        return response()->json([
+            'items' => GroupResource::collection($pagedGroups->items()),
+            'current_page' => $pagedGroups->currentPage(),
+            'count' => $pagedGroups->count(),
+            'per_page' => $pagedGroups->perPage()
+        ]);
     }
 
     /**

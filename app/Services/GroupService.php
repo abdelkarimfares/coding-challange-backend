@@ -6,6 +6,7 @@ namespace App\Services;
 use App\Models\Group;
 use App\Repositories\Api\GroupRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Class GroupService
@@ -19,9 +20,9 @@ class GroupService implements Api\GroupServiceInterface
     /**
      * @inheritDoc
      */
-    public function getGroups(): Collection
+    public function getGroups(int $perPage = 20): LengthAwarePaginator
     {
-        return $this->groupRepository->getAllGroups();
+        return $this->groupRepository->getAllGroups($perPage);
     }
 
     /**

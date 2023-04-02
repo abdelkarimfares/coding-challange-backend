@@ -6,6 +6,7 @@ namespace App\Repositories;
 use App\Models\Group;
 use App\Repositories\Api\GroupRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Group repository layer
@@ -22,9 +23,9 @@ class GroupRepository implements GroupRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function getAllGroups(): Collection
+    public function getAllGroups(int $perPage): LengthAwarePaginator
     {
-        return $this->group->get();
+        return $this->group->paginate($perPage);
     }
 
     /**

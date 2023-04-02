@@ -6,6 +6,7 @@ namespace App\Repositories\Api;
 use App\Models\Group;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Interface GroupRepositoryInterface
@@ -15,9 +16,10 @@ interface GroupRepositoryInterface
     /**
      * Get All groups
      *
-     * @return Collection
+     * @param int $perPage
+     * @return LengthAwarePaginator
      */
-    public function getAllGroups(): Collection;
+    public function getAllGroups(int $perPage): LengthAwarePaginator;
 
     /**
      * Get group by id
