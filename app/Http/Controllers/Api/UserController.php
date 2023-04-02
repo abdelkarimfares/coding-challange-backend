@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
 
 /**
  * User Controller class
@@ -67,6 +68,7 @@ class UserController extends Controller
         } catch (ValidationException $ex) {
             return response()->json(['errors' => $ex->errors()], 403);
         } catch (\Exception $ex) {
+            Log::critical($ex->getMessage());
             return response()->json(['message' => __('Internal Server Error')], 500);
         }
     }
@@ -88,6 +90,7 @@ class UserController extends Controller
         } catch (ValidationException $ex) {
             return response()->json(['errors' => $ex->errors()], 403);
         } catch (\Exception $ex) {
+            Log::critical($ex->getMessage());
             return response()->json(['message' => __('Internal Server Error')], 500);
         }
     }
@@ -107,6 +110,7 @@ class UserController extends Controller
         } catch (ModelNotFoundException $ex) {
             return response()->json(['message' => __('Sorry!, this user is not exists')], 404);
         } catch (\Exception|\Throwable $ex) {
+            Log::critical($ex->getMessage());
             return response()->json(['message' => __('Internal Server Error')], 500);
         }
     }
@@ -130,6 +134,7 @@ class UserController extends Controller
         } catch (ModelNotFoundException $ex) {
             return response()->json(['message' => __('Sorry!, this user is not exists')], 404);
         } catch (\Exception|\Throwable $ex) {
+            Log::critical($ex->getMessage());
             return response()->json(['message' => __('Internal Server Error')], 500);
         }
     }

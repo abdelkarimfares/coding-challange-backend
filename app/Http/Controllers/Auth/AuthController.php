@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Auth Controller Class
@@ -44,9 +45,10 @@ class AuthController extends Controller
             ]);
         } catch (ValidationException $ex) {
             return response()->json(['errors' => $ex->errors()], 403);
-        }
-        catch (UnauthorizedException $ex) {
+        } catch (UnauthorizedException $ex) {
             return response()->json(['message' => $ex->getMessage()], 401);
+        } catch (\Exception $ex) {
+         Log::critical($ex->getMessage());
         }
     }
 
