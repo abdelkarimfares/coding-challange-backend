@@ -51,7 +51,7 @@ class UserController extends Controller
         try {
             $user = $this->userService->getUser($id);
 
-            return response()->json(['data' => new UserResource($user)]);
+            return response()->json(['data' => new UserResource($user, true)]);
         } catch (ModelNotFoundException) {
             return response()->json(['data' => null], 404);
         }
