@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\GroupController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Auth\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,16 +17,19 @@ use App\Http\Controllers\Api\UserController;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+Route::prefix('auth')->group(function () {
+    Route::post('login',[AuthController::class, 'login'])->name('login');
+    Route::post('register', [AuthController::class, 'register'])->name('register');
+});
 
-Route::get('/users', [UserController::class, 'index']);
-Route::post('/users/create', [UserController::class, 'store']);
-Route::get('/users/{id}/show', [UserController::class, 'show']);
-Route::patch('/users/{id}/update', [UserController::class, 'update']);
-Route::delete('/users/{id}/delete', [UserController::class, 'delete']);
-Route::post('/users/{id}/attach-groups', [UserController::class, 'attachGroups']);
+Route::prefix('users')->group(function () {
+    Route::get('/', [UserController::class, 'index']);
+    Route::get('/{id}/show', [UserController::class, 'show']);
+    Route::post('/create', [UserController::class, 'store'])->middleware('auth:api');
+    Route::patch('/{id}/update', [UserController::class, 'update'])->middleware('auth:api');
+    Route::delete('/{id}/delete', [UserController::class, 'delete'])->middleware('auth:api');
+    Route::post('/{id}/attach-groups', [UserController::class, 'attachGroups'])->middleware('auth:api');
+});
 
 Route::get('/groups', [GroupController::class, 'index']);
 Route::get('/groups/{id}/show', [GroupController::class, 'show']);
