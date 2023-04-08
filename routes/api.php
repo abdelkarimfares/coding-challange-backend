@@ -20,6 +20,7 @@ use App\Http\Controllers\Auth\AuthController;
 Route::prefix('auth')->group(function () {
     Route::post('login',[AuthController::class, 'login'])->name('login');
     Route::post('register', [AuthController::class, 'register'])->name('register');
+    Route::get('user', [AuthController::class, 'getAuthenticatedUser'])->name('user')->middleware('auth:api');
 });
 
 Route::prefix('users')->group(function () {
@@ -28,8 +29,13 @@ Route::prefix('users')->group(function () {
     Route::post('/create', [UserController::class, 'store'])->middleware('auth:api');
     Route::patch('/{id}/update', [UserController::class, 'update'])->middleware('auth:api');
     Route::delete('/{id}/delete', [UserController::class, 'delete'])->middleware('auth:api');
-    Route::post('/{id}/attach-groups', [UserController::class, 'attachGroups'])->middleware('auth:api');
 });
 
-Route::get('/groups', [GroupController::class, 'index']);
-Route::get('/groups/{id}/show', [GroupController::class, 'show']);
+Route::prefix('groups')->group(function () {
+    Route::get('/', [GroupController::class, 'index']);
+    Route::get('/{id}/show', [GroupController::class, 'show']);
+    Route::post('/create', [GroupController::class, 'store'])->middleware('auth:api');
+    Route::patch('/{id}/update', [GroupController::class, 'update'])->middleware('auth:api');
+    Route::delete('/{id}/delete', [GroupController::class, 'delete'])->middleware('auth:api');
+});
+
