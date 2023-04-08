@@ -36,6 +36,7 @@ interface UserServiceInterface
      * @param array $data
      * @return User
      * @throws ValidationException
+     * @throws \Throwable
      */
     public function addUser(array $data): User;
 

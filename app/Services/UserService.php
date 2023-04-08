@@ -6,7 +6,7 @@ namespace App\Services;
 use App\Models\User;
 use App\Repositories\Api\UserRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 
@@ -49,17 +49,29 @@ class UserService implements Api\UserServiceInterface
             'lastname' => 'required|max:60',
             'phone' => 'required|max:10',
             'age' => 'required|numeric',
-            'type' => 'required|in:admin,customer',
             'email' => 'required|email|unique:users',
-            'password' => 'required'
+            'password' => 'required',
+            'groups.*' => 'nullable|integer|exists:App\Models\Group,id'
         ]);
 
         if (!$validator->errors()->isEmpty()) {
             throw new ValidationException($validator);
         }
-        $data['password'] = Hash::make($data['password']);
 
-        return $this->userRepository->createUser($data);
+        $data = $validator->valid();
+        $groups = $data['groups'] ?? [];
+
+        try {
+            DB::beginTransaction();
+            $user = $this->userRepository->createUser($data);
+            $this->userRepository->attachGroups($user, $groups);
+            DB::commit();
+        }catch (\Throwable $ex){
+            DB::rollBack();
+            throw $ex;
+        }
+
+        return $user;
     }
 
     /**
@@ -73,20 +85,21 @@ class UserService implements Api\UserServiceInterface
             'lastname' => 'required|max:60',
             'phone' => 'required|max:10',
             'age' => 'required|numeric',
-            'type' => 'required|in:admin,customer',
             'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'nullable'
+            'password' => 'nullable',
+            'groups.*' => 'nullable|integer|exists:App\Models\Group,id'
         ]);
 
         if (!$validator->errors()->isEmpty()) {
             throw new ValidationException($validator);
         }
 
-        if (isset($data['password'])) {
-            $data['password'] = Hash::make($data['password']);
-        }
+        $groups = $data['groups'] ?? [];
 
-        return $this->userRepository->updateUser($id, $data);
+        $user = $this->userRepository->updateUser($id, $data);
+        $this->userRepository->attachGroups($user, $groups);
+
+        return $user;
 
     }
 
@@ -95,8 +108,7 @@ class UserService implements Api\UserServiceInterface
      */
     public function deleteUser(int $id): bool
     {
-        return $this->userRepository->getById($id)
-            ->deleteOrFail();
+        return $this->userRepository->deleteUser($id);
     }
 
     /**
