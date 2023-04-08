@@ -29,4 +29,32 @@ interface GroupServiceInterface
      * @throws ModelNotFoundException
      */
     public function getGroup(int $id): Group;
+
+    /**
+     * Add New group
+     *
+     * @param array $data
+     * @return Group
+     * @throws ValidationException
+     */
+    public function addGroup(array $data): Group;
+
+    /**
+     * Edit Existing group
+     *
+     * @param int $id
+     * @param array $data
+     * @return Group
+     * @throws ValidationException
+     */
+    public function editGroup(int $id, array $data): Group;
+
+    /**
+     * Delete Existing group
+     *
+     * @param int $id
+     * @return bool
+     * @throws ModelNotFoundException|\Throwable
+     */
+    public function deleteGroup(int $id): bool;
 }
