@@ -8,6 +8,7 @@ use App\Models\UserGroup;
 use App\Repositories\Api\UserRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * Class UserRepository
@@ -42,7 +43,15 @@ class UserRepository implements UserRepositoryInterface
      */
     public function createUser(array $data): User
     {
-        $user = new User($data);
+        $user = new User();
+        $user->username = $data['username'];
+        $user->email = $data['email'];
+        $user->firstname = $data['firstname'];
+        $user->lastname = $data['lastname'];
+        $user->age = $data['age'];
+        $user->phone = $data['phone'];
+        $user->type = $data['type'];
+        $user->password = Hash::make($data['password']);
         $user->save();
         return $user;
     }
@@ -53,8 +62,14 @@ class UserRepository implements UserRepositoryInterface
     public function updateUser(int $id, array $data): User
     {
         $user = $this->getById($id);
-        foreach ($data as $key => $value) {
-            $user->setAttribute($key, $value);
+        $user->username = $data['username'];
+        $user->email = $data['email'];
+        $user->firstname = $data['firstname'];
+        $user->lastname = $data['lastname'];
+        $user->age = $data['age'];
+        $user->phone = $data['phone'];
+        if(isset($data['password']) && $data['password']){
+            $user->password = Hash::make($data['password']);
         }
         $user->save();
 
@@ -75,6 +90,25 @@ class UserRepository implements UserRepositoryInterface
 
             return $result;
         } catch (\Throwable $ex) {
+            DB::rollBack();
+            throw $ex;
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function deleteUser(int $id): bool
+    {
+        try {
+            DB::beginTransaction();
+            $user = $this->getById($id);
+            UserGroup::where('user_id', $user->id)->delete();
+            $deleted = $user->delete();
+            DB::commit();
+
+            return $deleted;
+        }catch (\Throwable $ex){
             DB::rollBack();
             throw $ex;
         }

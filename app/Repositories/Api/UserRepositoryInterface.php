@@ -49,6 +49,15 @@ interface UserRepositoryInterface
     public function updateUser(int $id, array $data): User;
 
     /**
+     * Delete user with attached groups
+     *
+     * @param int $id
+     * @return bool
+     * @throws ModelNotFoundException|Throwable
+     */
+    public function deleteUser(int $id): bool;
+
+    /**
      * Attach groups to user
      *
      * @param User $user
