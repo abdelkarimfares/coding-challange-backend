@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Services\Api\AuthInterface;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -60,4 +61,14 @@ class AuthController extends Controller
     {
 
     }
+
+    /**
+     * @param Request $request
+     * @return void
+     */
+    public function getAuthenticatedUser(Request $request)
+    {
+        return new UserResource($request->user(), true);
+    }
+
 }
