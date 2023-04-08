@@ -35,7 +35,7 @@ class UserController extends Controller
         return response()->json([
             'items' => UserResource::collection($pagedUsers->items()),
             'current_page' => $pagedUsers->currentPage(),
-            'count' => $pagedUsers->count(),
+            'count' => $pagedUsers->total(),
             'per_page' => $pagedUsers->perPage()
         ]);
     }
@@ -66,6 +66,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $data = $this->getRequestedData($request);
+        $data['type'] = 'customer';
 
         try {
             $user = $this->userService->addUser($data);
@@ -122,30 +123,6 @@ class UserController extends Controller
     }
 
     /**
-     * Attach user to groups
-     *
-     * @param int $id
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function attachGroups(int $id, Request $request)
-    {
-        try {
-            $groups = $request->get('groups', []);
-            $attached = $this->userService->attachUserToGroups($id, $groups);
-
-            return response()->json(['attached' => $attached]);
-        } catch (ValidationException $ex) {
-            return response()->json(['errors' => $ex->errors()], 403);
-        } catch (ModelNotFoundException $ex) {
-            return response()->json(['message' => __('Sorry!, this user is not exists')], 404);
-        } catch (\Exception|\Throwable $ex) {
-            Log::critical($ex->getMessage());
-            return response()->json(['message' => __('Internal Server Error')], 500);
-        }
-    }
-
-    /**
      * Get the posted Data from request
      *
      * @param Request $request
@@ -161,7 +138,8 @@ class UserController extends Controller
             'age',
             'type',
             'email',
-            'password'
+            'password',
+            'groups'
         ]);
     }
 }
